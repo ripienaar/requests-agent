@@ -1,0 +1,64 @@
+builds:
+  - binary: 'requests-{{ .Os }}_{{ .Arch }}'
+    goos:
+      - openbsd
+      - windows
+      - linux
+      - darwin
+      - freebsd
+    goarch:
+      - amd64
+      - '386'
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: '386'
+      - goos: darwin
+        goarch: arm
+      - goos: darwin
+        goarch: arm64
+      - goos: openbsd
+        goarch: arm
+      - goos: openbsd
+        goarch: arm64
+      - goos: solaris
+        goarch: arm
+      - goos: solaris
+        goarch: arm64
+      - goos: solaris
+        goarch: '386'
+
+archives:
+  - format: tar.gz
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    wrap_in_directory: "requests"
+    builds_info:
+      group: root
+      owner: root
+      mode: 0755
+      mtime: "{{ .CommitDate }}"
+
+    files:
+      - src: agent/requests.json
+        strip_parent: true
+        info: &info
+          group: root
+          owner: root
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+
+      - src: agent/requests.ddl
+        strip_parent: true
+        info:
+          <<: *info
+
+checksum:
+  name_template: 'SHA256SUMS'
+  algorithm: sha256
+
+release:
+  draft: true
+
+changelog:
+  skip: true
